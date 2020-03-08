@@ -15,13 +15,6 @@ value=bytearray([49])#variable que almacena el arreglo con el valor tipo byte 49
 
 #Loop infinito
 while True:
-    ser.write(value) #Escribe los bytes al puerto. Este debe de ser tipo byte (o compatible como bytearray)
-    ser.flush() #Espera a que todos los datos esten escritos
-    uid=ser.readline() #lee una linea terminada por '\n'. En nuestro caso despues de recibir el UID de la terminal
-    uid=str(uid)#Convierte el UID a tipo string
-    uid=uid[2:22]#Y se extraen los caracteres basura
-    print(uid)#Se imprime el uid para confirmar la recepcion    
-    ser.close()#Se cierra el puerto     
-    break 
+"""
 
 

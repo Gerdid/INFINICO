@@ -31,25 +31,28 @@ void setup(void) {
   Serial.begin(9600);
   Serial.println("NDEF Reader");
   nfc.begin();
-  pinMode(13, OUTPUT);
+  pinMode(9, OUTPUT);
 }
 
 int incomingByte = 0;
+int i=0;
 
 void loop(void) {
-  digitalWrite(13, LOW);
+  digitalWrite(9, LOW);
   if (Serial.available() > 0) {
     incomingByte = Serial.read();
     if (incomingByte == 49) {   //Si se recibe el número 1
       while (1) {
-        digitalWrite(13, HIGH);    
+        digitalWrite(9, HIGH);    
         //Serial.println("\nEscanee tarjeta NFC\n");
         if (nfc.tagPresent()) {
           NfcTag tag = nfc.read();
           String UID=tag.getUidString();
           Serial.println(UID);
+          
           break;
         }
+        delay(5);
       }
     }
   }
