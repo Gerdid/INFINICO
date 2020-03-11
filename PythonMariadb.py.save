@@ -14,7 +14,7 @@ import sys
 import serial
 import re
 
-ser=serial.Serial('/dev/ttyACM0',9600)
+ser=serial.Serial('/dev/ttyACM1',9600)
 
 #variable que almacena el arreglo con el valor tipo byte 49 (ASCII 1)
 value=bytearray([49])
@@ -48,34 +48,47 @@ def get_balance(cursor):
 	return uid_string,balance
 
 def read_balance(cursor):
-	#print("Escanee tarjeta")
-	#client=[]
+	print("Escanee tarjeta")
+	client=[]
 	uid=read_card()
 	uid_string=uid
 	cursor.execute("SELECT balance FROM test.cliente WHERE uid=?",(uid,))
 	for(uid) in cursor:
 		client=(f"{uid}")
 	balance=int(re.search(r'\d+',client).group(0))
-	return balance
+	return uid_string,balance
 
 def read_points(cursor):
-	#print("Escanee tarjeta")
-	#client=[]
+	print("Escanee tarjeta")
+	client=[]
 	uid=read_card()
 	uid_string=uid
 	cursor.execute("SELECT points FROM test.cliente WHERE uid=?",(uid,))
 	for(uid) in cursor:
 		client=(f"{uid}")
 	points=int(re.search(r'\d+',client).group(0))
-	return points
+	cursor.execute("SELECT balance FROM test.cliente WHERE uid=?",(uid,))
+	for(uid) in cursor:
+		client=(f"{uid}")
+	balance=int(re.search(r'\d+',client).group(0))
+	return uid_string,points
 
 def read_balance_and_points(cursor):
-	#client=[]
+	print("Escanee tarjeta")
+	client=[]
 	uid=read_card()
 	uid_string=uid
-	balance=read_balance(cursor)
-	points=read_points(cursor)
-	return uid_string,balance,points
+	cursor.execute("SELECT points FROM test.cliente WHERE uid=?",(uid,))
+	for(uid) in cursor:
+		client=(f"{uid}")
+	points=int(re.search(r'\d+',client).group(0))
+
+	client=[]
+	cursor.execute("SELECT balance FROM test.cliente WHERE uid=?",(uid,))
+	for(uid) in cursor:
+		client=(f"{uid}")
+	
+	return balance,points
 
 def recharge(cursor):
 	uid_string,balance=get_balance(cursor)
@@ -90,18 +103,10 @@ def update_balance(cursor,uid_string,new_balance):
 	#Actualiza el saldo del uid correspondiente
 	cursor.execute("UPDATE test.cliente SET balance=? WHERE uid=?",(new_balance,uid_string))
 
-def update_points(cursor,uid_string,new_points):
-	#Actualiza los puntos del uid correspondiente
-	cursor.execute("UPDATE test.cliente SET points=? WHERE uid=?",(new_points,uid_string))
-
-
 def read_card():
 	#Se abre el puerto serial para el ordenar a terminal y recepcion de datos de terminal
 	#Serial toma dos parametros: dispositivo serial y el baudrate
-	print("Escanee tarjeta")
-	#client=[]
-	#uid=read_card()
-	ser=serial.Serial('/dev/ttyACM0',9600)
+	ser=serial.Serial('/dev/ttyACM1',9600)
 	ser.write(value) #Escribe los bytes al puerto. Este debe de ser tipo byte (o compatible como bytearray)
 	ser.flush() #Espera a que todos los datos esten escritos
 	uid=ser.readline() #lee una linea terminada por '\n'. En nuestro caso despues de recibir el UID de la terminal
@@ -120,23 +125,8 @@ def cobrar(cursor):
 	else:
 		print("Saldo insuficiente, use otro metodo de pago")
 
-def points_to_balance(cursor):
-	#10 puntos= $1
-	#uid=read_card()
-	#points=read_points(cursor,uid)
-	#balance=read_balance(cursor,uid)
-	#read_balance_and_points(cursor)
-	#new_balance=balance+(points/10)
-	uid_string,balance,points=read_balance_and_points(cursor)
-	#update_balance(cursor,uid,new_balance)
-	print(type(balance))
-	new_balance=balance+(points/10)
-	new_points=points-points
-	update_balance(cursor,uid_string,new_balance)
-	update_points(cursor,uid_string,new_points)
-
 def display_card_summary(cursor):
-	uid_string,balance,points=read_balance_and_points(cursor)
+	balance,points=read_balance_and_points(cursor)
 	print("-------------------------------------")
 	print("------------Tarjeta No.--------------")
 	print("-------",uid_string,"--------")
@@ -146,7 +136,7 @@ def display_card_summary(cursor):
 
 
 while True:
-	print("Introduzca operacion: \n 1.Resumen de tarjeta \n 2.Recargar saldo \n 3.Cobrar \n 4.Convertir puntos a saldo")
+	print("Introduzca operacion: 1.Resumen de tarjeta 2.Recargar saldo 3.Cobrar")
 	op=input()
 	if(op=='1'):
 		display_card_summary(cursor)
@@ -154,7 +144,5 @@ while True:
 		recharge(cursor)
 	if(op=='3'):
 		cobrar(cursor)
-	if(op=='4'):
-		points_to_balance(cursor)
 
 
