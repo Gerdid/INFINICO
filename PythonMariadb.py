@@ -139,10 +139,10 @@ while True:
 	if(op=='1'):
 		display_card_summary(cursor,uid)
 	if(op=='2'):
-		recharge(cursor)
+		recharge(cursor,uid)
 	if(op=='3'):
-		cobrar(cursor)
+		cobrar(cursor,uid)
 	if(op=='4'):
-		points_to_balance(cursor)
+		points_to_balance(cursor,uid)
 
 
