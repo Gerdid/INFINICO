@@ -135,8 +135,8 @@ def read_card():
 while True:
 	print("Introduzca operacion: \n 1.Resumen de tarjeta \n 2.Recargar saldo \n 3.Cobrar \n 4.Convertir puntos a saldo")
 	op=input()
+	uid=read_card(cursor)
 	if(op=='1'):
-		uid=read_card(cursor)
 		display_card_summary(cursor,uid)
 	if(op=='2'):
 		recharge(cursor)
