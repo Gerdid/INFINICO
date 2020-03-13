@@ -1,4 +1,5 @@
 """
+Hola soy un fantasma (como el niño)
 PROYECTO INTEGRADOR
 INFINICO
 8-Mar-2020
@@ -47,7 +48,7 @@ def get_balance(cursor,uid):
 
 def read_balance(cursor,uid):
 	#client=[]
-	uid=read_card()
+	#uid=read_card()
 	uid_string=uid
 	cursor.execute("SELECT balance FROM test.cliente WHERE uid=?",(uid,))
 	for(uid) in cursor:
@@ -86,10 +87,10 @@ def update_points(cursor,uid_string,new_points):
 def cobrar(cursor,uid):
 	print("Ingrese total a cobrar: ")
 	ammount=int(input())
-	balance=read_balance(cursor)
+	balance=read_balance(cursor,uid)
 	if(balance>=ammount):
 		new_balance=balance-ammount
-		update_balance(cursor,uid_string,new_balance)
+		update_balance(cursor,uid,new_balance)
 	else:
 		print("Saldo insuficiente, use otro metodo de pago")
 
@@ -103,8 +104,8 @@ def points_to_balance(cursor,uid):
 	#print(type(balance))
 	#new_balance=balance+(points/10)
 	#new_points=points-points
-	balance_to_add=balance+balance//10
-	rem_points=balance%10
+	balance_to_add=balance+points//10
+	rem_points=points%10
 	update_balance(cursor,uid,balance_to_add)
 	update_points(cursor,uid,rem_points)
 
@@ -135,7 +136,7 @@ def read_card():
 while True:
 	print("Introduzca operacion: \n 1.Resumen de tarjeta \n 2.Recargar saldo \n 3.Cobrar \n 4.Convertir puntos a saldo")
 	op=input()
-	uid=read_card(cursor)
+	uid=read_card()
 	if(op=='1'):
 		display_card_summary(cursor,uid)
 	if(op=='2'):
