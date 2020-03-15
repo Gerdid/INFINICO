@@ -1,5 +1,4 @@
 """
-Hola soy un fantasma (como el niño)
 PROYECTO INTEGRADOR
 INFINICO
 8-Mar-2020
@@ -98,19 +97,12 @@ def points_to_balance(cursor,uid):
 	#10 puntos= $1
 	points=read_points(cursor,uid)
 	balance=read_balance(cursor,uid)
-	#new_balance=balance+(points/10)
-	#uid_string,balance,points=read_balance_and_points(cursor)
-	#update_balance(cursor,uid,new_balance)
-	#print(type(balance))
-	#new_balance=balance+(points/10)
-	#new_points=points-points
 	balance_to_add=balance+points//10
 	rem_points=points%10
 	update_balance(cursor,uid,balance_to_add)
 	update_points(cursor,uid,rem_points)
 
 def display_card_summary(cursor,uid):
-	#uid,balance,points=read_balance_and_points(cursor)
 	balance=read_balance(cursor,uid)
 	points=read_points(cursor,uid)
 	print("-------------------------------------")
