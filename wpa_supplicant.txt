@@ -2,6 +2,12 @@ country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev 
 update_config=1
 
+network={
+	ssid="FUNDADORES 4153"
+	psk="38973tK!"
+	key_mgmt=WPA-PSK
+	priority=4
+}
 
 network={
 	ssid="LAPTOP-JR4DCFI7 6329"
